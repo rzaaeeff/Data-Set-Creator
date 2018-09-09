@@ -63,7 +63,8 @@ def insert_all_letters(conn, letters):
 
 
 def show_counts_of_all_letters(conn):
-    alphabet = "əƏğĞıIöÖşŞüÜaAbBcCçÇdDeEfFgGhHiİjJkKlLmMnNoOpPqQrRsStTuUvVxXyYzZwW"
+    # alphabet = "əƏğĞıIöÖşŞüÜaAbBcCçÇdDeEfFgGhHiİjJkKlLmMnNoOpPqQrRsStTuUvVxXyYzZwW"
+    alphabet = "əğĞıIöşüaAbBcçdDeEfFgGhHiİjJklLmMnNopPqQrRsStTuvVxyYzwW"
     counts = {}
 
     rows = select_all_letters(conn)

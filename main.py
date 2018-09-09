@@ -8,6 +8,14 @@ class Letter:
         self.image = image
         self.drawn_in_free_mode = drawn_in_free_mode
 
+def convert_if_similar(letter):
+    similar_letters = ['Ə', 'Ş', 'Ç', 'Ü', 'Ö', 'C', 'S', 'O', 'U', 'X', 'Z', 'K']
+
+    for element in similar_letters:
+        if element == letter:
+            return letter.lower()
+
+    return letter
 
 # opening input folder
 input_folder_contents = os.listdir(INPUT_FOLDER)
@@ -25,7 +33,7 @@ for database in databases:
     conn = create_connection(database)
     rows = select_all_letters(conn)
     for row in rows:
-        letter = row[1]
+        letter = convert_if_similar(row[1])
         image = row[2]
         drawn_in_free_mode = 0
         try:
@@ -39,6 +47,7 @@ for database in databases:
         # indicate empty db
         print(database + " is empty!")
     conn.close()
+
 
 # creating or opening output db file
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
