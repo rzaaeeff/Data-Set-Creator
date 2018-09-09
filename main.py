@@ -34,6 +34,11 @@ for database in databases:
     rows = select_all_letters(conn)
     for row in rows:
         letter = convert_if_similar(row[1])
+
+        # ignore 'w' & 'W'
+        if letter == 'w' or letter == 'W':
+            continue
+
         image = row[2]
         drawn_in_free_mode = 0
         try:
