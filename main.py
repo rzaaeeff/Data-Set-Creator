@@ -9,7 +9,7 @@ class Letter:
         self.drawn_in_free_mode = drawn_in_free_mode
 
 def convert_if_similar(letter):
-    similar_letters = ['Ə', 'Ş', 'Ç', 'Ü', 'Ö', 'C', 'S', 'O', 'U', 'X', 'Z', 'K']
+    similar_letters = ['Ə', 'Ş', 'Ç', 'Ü', 'Ö', 'C', 'S', 'O', 'U', 'V', 'X', 'Z', 'K']
 
     for element in similar_letters:
         if element == letter:
