@@ -9,4 +9,10 @@ counts = db.show_counts_of_all_letters(conn)
 #        sorted_counts[key] = counts[key]
 #
 #print(sorted_counts)
-print(counts)
+counts_without_zeros = {}
+
+for key in counts:
+    if (counts[key] is not 0):
+        counts_without_zeros[key] = counts[key]
+
+print(counts_without_zeros)
