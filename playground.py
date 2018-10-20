@@ -19,7 +19,7 @@ counts = db.show_counts_of_all_letters(conn)
 filtered_counts = {}
 
 for key in counts:
-    if (counts[key] is not 0 and counts[key] < 1000):
+    if (counts[key] is not 0):
         filtered_counts[key] = counts[key]
 
 print(filtered_counts)
