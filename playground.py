@@ -27,8 +27,8 @@ conn = db.create_connection(db.DATABASE)
 # print(filtered_counts)
 
 rows = db.select_all_letters(conn)
-letter_objects = []
-images = []
+id_letter_pair_list = []
+count = 0
 
 for row in rows:
     id = row[0]
@@ -41,8 +41,18 @@ for row in rows:
     except IndexError:
         pass
 
-    letter_objects.append(Letter(author, letter, image, drawn_in_free_mode))
-    images.append(image)
+    letter_object = Letter(author, letter, image, drawn_in_free_mode)
+    id_letter_pair_list.append((id, letter_object))
 
-avg_width, avg_height = image_processor.calculate_width_height_average(images)
-print(avg_width, avg_height)
+    count += 1
+    if count == 3: break
+
+blobs = []
+
+for id, letter_object in id_letter_pair_list:
+    blobs.append(letter_object.image)
+
+blob_results = image_processor.preprocess_images(blobs)
+
+for blob in blob_results:
+    image_processor.save_image(blob, str(blob[1:40]) + '.png')
