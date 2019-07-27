@@ -3,19 +3,12 @@ import io
 import multiprocessing as mp
 from joblib import Parallel, delayed
 from tqdm import tqdm
+from constant import PADDING, SIZE
 
 # these indexes are fixed, necessary for helper to work
 # if you change them, adapt your code accordingly
 __LEFT, __TOP, __RIGHT, __BOTTOM = 0, 1, 2, 3
 
-__PADDING = 20
-
-# sizes from initial dataset were averaged around 545
-# which means that the average width and height was 545 pixels
-# but this size is big for training and will slow down the entire process
-# so I decided to use lower size which will also not affect the quality
-# since the overall aspect ratio (square) is preserved...
-__SIZE = 320
 
 def __find_edges(image):
     """
@@ -37,7 +30,7 @@ def __find_edges(image):
     return [left, top, right, bottom]
 
 
-def __add_padding(edges, padding=__PADDING):
+def __add_padding(edges, padding=PADDING):
     """
     Add defined padding to all edges
     :param padding:
@@ -93,30 +86,16 @@ def calculate_width_height_average(blobs):
     return width_sum // len(results), height_sum // len(results)
 
 
-def preprocess_images(blobs):
-    images = []
-    for blob in blobs:
-        images.append(__blob_to_image(blob))
-
-    results = __preprocess_images(images)
-
-    blob_results = []
-    for result in results:
-        blob_results.append(__image_to_blob(result))
-
-    return blob_results
-
-def __preprocess_images(images):
+def preprocess_images(letter_objects):
     """
     Parallel execution to preprocess images
     :param blobs: list of images as binary objects
     :return: list preprocess images as binary objects
     """
     return Parallel(n_jobs=mp.cpu_count())(
-        delayed(__get_preprocessed_image)(image) for image in tqdm(images))
+        delayed(__get_preprocessed_image)(letter_object) for letter_object in tqdm(letter_objects))
 
-
-def __get_size_after_processing(image, padding=__PADDING):
+def __get_size_after_processing(image, padding=PADDING):
     nimage = Image.new("RGB", image.size, "WHITE")
     nimage.paste(image, (0, 0), image)
     nimage.convert('LA')
@@ -130,7 +109,9 @@ def __get_size_after_processing(image, padding=__PADDING):
     # print('\r' + str(len(widths)), end='')
     return width, height
 
-def __get_preprocessed_image(image, padding=__PADDING, size=__SIZE):
+
+def __get_preprocessed_image(letter_object, padding=PADDING, size=SIZE):
+    image = __blob_to_image(letter_object.image)
     nimage = Image.new("RGB", image.size, "WHITE")
     nimage.paste(image, (0, 0), image)
     nimage.convert('LA')
@@ -142,21 +123,28 @@ def __get_preprocessed_image(image, padding=__PADDING, size=__SIZE):
     nimage = nimage.crop(edges)
     nimage = __square_resize(nimage, size)
 
-    return nimage
+    letter_object.image = __image_to_blob(nimage)
+
+    return letter_object
+
 
 def __square_resize(image, size):
-    return image.resize((size, size))
+    return image.resize((size, size), Image.ANTIALIAS)
+
 
 def __blob_to_image(blob):
     return Image.open(io.BytesIO(blob))
+
 
 def __image_to_blob(image):
     stream = io.BytesIO()
     image.save(stream, format="PNG")
     return stream.getvalue()
 
+
 def show_image(blob):
     __blob_to_image(blob).show()
+
 
 def save_image(blob, name):
     __blob_to_image(blob).save(name, 'PNG')

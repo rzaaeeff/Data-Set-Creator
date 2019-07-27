@@ -1,9 +1,8 @@
 import sqlite3
 from sqlite3 import Error
 
-INPUT_FOLDER = "input"
-OUTPUT_FOLDER = "output"
-DATABASE = OUTPUT_FOLDER + "/" + "DataSetCreator.db"
+from constant import ALPHABET
+
 
 def create_connection(db_file):
     """ create a database connection to the SQLite database
@@ -63,13 +62,11 @@ def insert_all_letters(conn, letters):
 
 
 def show_counts_of_all_letters(conn):
-    # alphabet = "əƏğĞıIöÖşŞüÜaAbBcCçÇdDeEfFgGhHiİjJkKlLmMnNoOpPqQrRsStTuUvVxXyYzZwW"
-    alphabet = "əğĞıIöşüaAbBcçdDeEfFgGhHiİjJklLmMnNopPqQrRsStTuvVxyYz"
     counts = {}
 
     rows = select_all_letters(conn)
 
-    for letter in alphabet:
+    for letter in ALPHABET:
         counts[letter] = 0
 
     for row in rows:
