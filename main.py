@@ -6,14 +6,7 @@ from tqdm import tqdm
 import db
 import image_processor
 from constant import *
-
-class Letter:
-    def __init__(self, author, letter, image, drawn_in_free_mode, id=-1):
-        self.id = id
-        self.author = author
-        self.letter = letter
-        self.image = image
-        self.drawn_in_free_mode = drawn_in_free_mode
+from letter import Letter
 
 def convert_if_similar(letter):
     similar_letters = ['Ə', 'Ş', 'Ç', 'Ü', 'Ö', 'C', 'S', 'O', 'U', 'V', 'X', 'Z', 'K']

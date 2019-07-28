@@ -1,8 +1,10 @@
-from PIL import Image
 import io
 import multiprocessing as mp
+
+from PIL import Image
 from joblib import Parallel, delayed
 from tqdm import tqdm
+
 from constant import PADDING, SIZE
 
 # these indexes are fixed, necessary for helper to work
@@ -56,12 +58,12 @@ def __squarify(edges):
 
     if width > height:
         diff = width - height
-        edges[__TOP] -= diff / 2
-        edges[__BOTTOM] += (diff - diff / 2)
+        edges[__TOP] -= diff // 2
+        edges[__BOTTOM] += (diff - diff // 2)
     elif height > width:
         diff = height - width
-        edges[__LEFT] -= diff / 2
-        edges[__RIGHT] += (diff - diff / 2)
+        edges[__LEFT] -= diff // 2
+        edges[__RIGHT] += (diff - diff // 2)
 
     return edges
 
@@ -112,9 +114,8 @@ def __get_size_after_processing(image, padding=PADDING):
 
 def __get_preprocessed_image(letter_object, padding=PADDING, size=SIZE):
     image = __blob_to_image(letter_object.image)
-    nimage = Image.new("RGB", image.size, "WHITE")
+    nimage = Image.new("LA", image.size, "WHITE")
     nimage.paste(image, (0, 0), image)
-    nimage.convert('LA')
 
     edges = __find_edges(nimage)
     edges = __add_padding(edges, padding)

@@ -1,5 +1,6 @@
-# Output database
+# Output database and images
 output/
+preprocessed-output/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
